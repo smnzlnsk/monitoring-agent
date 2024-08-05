@@ -1,5 +1,5 @@
 dist:
-  module: github.com/smnzlnsk/monitoring-manager/agent
+  module: github.com/smnzlnsk/monitoring-agent
   description: Master Thesis - Telemetry driven Network Optimisation in Edge-Cloud Orchestration Frameworks
   otelcol_version: 0.105.0
   version: 0.0.1
