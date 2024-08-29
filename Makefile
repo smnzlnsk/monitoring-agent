@@ -35,9 +35,10 @@ endif
 OSARCH ?= unknown
 
 # OpenTelemetry Collector Builder
-OCB=$(SCRIPTS_DIR)/ocb-$(OSARCH)
+OCB=builder
+#OCB=$(SCRIPTS_DIR)/ocb-$(OSARCH)
 COLLECTOR_BIN=agent
-COLLECTOR_BUILD_DIR=$(BUILD_DIR)/oakestra-monitoring-agent
+COLLECTOR_BUILD_DIR=/tmp/oakestra-monitoring-agent
 COLLECTOR_CONFIG_DIR=$(CONFIG_DIR)/opentelemetry-collector
 
 # Versioning
@@ -50,6 +51,10 @@ LDFLAGS=-ldflags "-X 'main.Version=$(VERSION)' -X 'main.Commit=$(COMMIT)' -X 'ma
 
 # Variables
 BINARY_NAME ?= oakestra-monitoring-agent
+
+# Docker
+DOCKER=docker
+CONTAINER_NAME=monitoring-agent
 
 # Commands
 all: help
@@ -66,13 +71,14 @@ help:
 	@echo "run-go \t\t\t run the binary in $(SRC_DIR)"
 	@echo "run-collector \t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
 
-build-go: setup
-	@echo "Building binary..."
-	$(GOBUILD) $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) $(SRC_DIR)
+build-docker:
+	@echo "Building docker container..."
+  $(DOCKER) build --progress=plain -t $(CONTAINER_NAME):latest .
+
 
 build-collector: setup
 	@echo "Building collector..."
-	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN) --output-path=$(COLLECTOR_BUILD_DIR)
+	$(OCB) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN) --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
 
 clean: 
 	@echo "Cleaning..."
@@ -99,18 +105,10 @@ mod-tidy:
 	@echo "Tidying up modules..."
 	$(GOMOD) tidy
 
-install:
-	@echo "Installing binary..."
-	$(GOCMD) install $(SRC_DIR)
-
-run-go: build-go
-	@echo "Running binary..."
-	$(BUILD_DIR)/$(BINARY_NAME)
-
 run-collector: build-collector
 	@echo "Running collector..."
 	$(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
 
 # Phony targets
-.PHONY: all build-go build-collector clean test fmt vet mod-tidy install run-go run-collector help
+.PHONY: all build-docker build-collector clean test fmt vet mod-tidy run-collector help
 
