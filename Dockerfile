@@ -10,7 +10,7 @@ RUN apk add --no-cache git make
 WORKDIR /app
 
 COPY ./config/opentelemetry-collector-builder/manifest.yaml ./
-COPY internal/ ./internal
+COPY ./exporters/ ./exporters
 COPY go.mod go.sum ./
 
 RUN go mod download && \ 
