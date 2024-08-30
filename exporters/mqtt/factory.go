@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/smnzlnsk/mqttexporter/internal/metadata"
+	"github.com/smnzlnsk/monitoring-agent/exporters/mqtt/internal/metadata"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/exporter"
 	"go.opentelemetry.io/collector/exporter/exporterhelper"

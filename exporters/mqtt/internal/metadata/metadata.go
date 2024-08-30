@@ -6,5 +6,5 @@ import (
 
 var (
 	Type      = component.MustNewType("mqttexporter")
-	ScopeName = "github.com/smnzlnsk/mqttexporter"
+	ScopeName = "github.com/smnzlnsk/monitoring-agent/exporters/mqtt"
 )
