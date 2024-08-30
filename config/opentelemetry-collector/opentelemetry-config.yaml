@@ -2,7 +2,7 @@ receivers:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
   hostmetrics:
     collection_interval: 5s
-    root_path: /
+    #root_path: /
     scrapers:
       cpu:
       memory:
@@ -15,20 +15,42 @@ receivers:
 
   hostmetrics/disk:
     collection_interval: 60s
-    root_path: /
+    #root_path: /
     scrapers:
       disk:
       filesystem:
 
+processors:
+  resource:
+    attributes:
+      - key: machine
+        value: macbook_agent
+        action: upsert
+
 exporters:
-  # metrics are for now forwarded to prometheus by the monitoring-manager
+  debug:
+    verbosity: normal
+  mqttexporter:
+    interval: 1s
+    broker:
+      host: mosquitto
+      port: 1883
+
+  prometheus:
+    endpoint: "localhost:8882"
+    enable_open_metrics: true
+
   otlp:
     endpoint: monitoring-manager:4317 # TODO: configure endpoint here
     tls:
       insecure: true
 
 service:
+  telemetry:
+    metrics:
+      level: none
   pipelines:
     metrics:
       receivers: [hostmetrics, hostmetrics/disk]
-      exporters: [debug, otlp] # can also use otlpgrpc here
+      processors: [resource]
+      exporters: [debug, prometheus, mqttexporter]
