@@ -99,11 +99,11 @@ build: build-darwin build-linux
 .PHONY: build-darwin
 build-darwin:
 	@echo "Building collector for darwin... "
-	GOOS=linux GOARCH=arm64 $(OCB) --ldflags=$(BUILDER_LDFLAGS) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN)_linux_arm64 --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
+	GOOS=darwin GOARCH=arm64 $(OCB) --ldflags=$(BUILDER_LDFLAGS) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN)_darwin_arm64 --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
 
 .PHONY: build-linux
 build-linux:
-	GOOS=linux GOARCH=arm64 $(OCB) --ldflags=$(BUILDER_LDFLAGS) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN)_darwin_arm64 --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
+	GOOS=linux GOARCH=arm64 $(OCB) --ldflags=$(BUILDER_LDFLAGS) --config=$(BUILDER_CONFIG_DIR)/manifest.yaml --name=$(COLLECTOR_BIN)_linux_arm64 --output-path=$(COLLECTOR_BUILD_DIR) --skip-strict-versioning
 
 .PHONY: clean
 clean:
@@ -133,7 +133,7 @@ mod-tidy:
 .PHONY: run
 run: manager
 	@echo "Running collector..."
-	$(BINARY_DIR)/$(COLLECTOR_BIN) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
+	$(BINARY_DIR)/$(COLLECTOR_BIN)_$(GOOS)_$(GOARCH) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
 
 .PHONY: manager
 manager: bin
