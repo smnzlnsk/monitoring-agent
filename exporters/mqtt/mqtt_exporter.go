@@ -53,6 +53,7 @@ func (me *mqttExporter) pushMetrics(ctx context.Context, md pmetric.Metrics) err
 	if token.Error() != nil {
 		me.logger.Error("error in publishing metric data")
 	}
+	me.logger.Info("sent metric data")
 	return nil
 }
 
