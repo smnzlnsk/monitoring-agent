@@ -76,7 +76,7 @@ help:
 	@echo "mod-tidy \t\t run go mod tidy"
 	@echo "run \t\t\t run the collector in $(COLLECTOR_BUILD_DIR)/$(COLLECTOR_BIN)"
 
-push: manager
+push: build-bin
 	@echo "Pushing bin to github..."
 	@git add bin
 	@git commit -m "Pushed build $(COMMIT) on $(DATE)"
