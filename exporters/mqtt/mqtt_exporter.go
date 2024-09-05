@@ -7,17 +7,19 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/pdata/pmetric"
+	"go.uber.org/zap"
 )
 
 type mqttExporter struct {
 	config *Config
+	logger *zap.Logger
 	*marshaler
 	client mqtt.Client
 	host   component.Host
 	cancel context.CancelFunc
 }
 
-func newMQTTExporter(cfg *Config) (*mqttExporter, error) {
+func newMQTTExporter(cfg *Config, logger *zap.Logger) (*mqttExporter, error) {
 	uri := fmt.Sprintf("%s:%d", cfg.Broker.Host, cfg.Broker.Port)
 
 	opts := mqtt.NewClientOptions()
@@ -30,6 +32,7 @@ func newMQTTExporter(cfg *Config) (*mqttExporter, error) {
 	}
 
 	exporter := &mqttExporter{
+		logger: logger,
 		config: cfg,
 		client: client,
 	}
@@ -47,7 +50,10 @@ func (me *mqttExporter) pushMetrics(ctx context.Context, md pmetric.Metrics) err
 	// Publish metrics over MQTT
 	token := me.client.Publish(me.config.Topic, 0, false, data)
 	token.Wait()
-	return token.Error()
+	if token.Error() != nil {
+		me.logger.Error("error in publishing metric data")
+	}
+	return nil
 }
 
 func (me *mqttExporter) start(ctx context.Context, host component.Host) error {

@@ -46,7 +46,8 @@ func createMetricsExporter(
 	cfg component.Config,
 ) (exporter.Metrics, error) {
 	config := (cfg.(*Config))
-	me, err := newMQTTExporter(config)
+	logger := set.Logger
+	me, err := newMQTTExporter(config, logger)
 	if err != nil {
 		return nil, err
 	}
