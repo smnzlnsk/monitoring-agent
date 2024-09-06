@@ -44,16 +44,13 @@ func (me *mqttExporter) pushMetrics(ctx context.Context, md pmetric.Metrics) err
 	if err != nil {
 		return err
 	}
-	// TODO:
-	// add host identifier labeling
-
 	// Publish metrics over MQTT
 	token := me.client.Publish(me.config.Topic, 0, false, data)
 	token.Wait()
 	if token.Error() != nil {
 		me.logger.Error("error in publishing metric data")
 	}
-	me.logger.Info("sent metric data")
+	me.logger.Debug("published metric data")
 	return nil
 }
 
