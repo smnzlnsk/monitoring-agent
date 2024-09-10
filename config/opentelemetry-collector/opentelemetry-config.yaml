@@ -34,11 +34,6 @@ exporters:
     endpoint: "localhost:8882"
     enable_open_metrics: true
 
-  otlp:
-    endpoint: monitoring-manager:4317 # TODO: configure endpoint here
-    tls:
-      insecure: true
-
 processors:
   resource:
     attributes:
@@ -60,4 +55,4 @@ service:
     metrics:
       receivers: [hostmetrics, hostmetrics/disk]
       processors: [resource, cumulativetodelta]
-      exporters: [debug, prometheus, mqttexporter]
+      exporters: [prometheus, mqttexporter]
