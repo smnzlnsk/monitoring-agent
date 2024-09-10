@@ -1,4 +1,5 @@
 archive/
+.idea/
 "*.exe"
 "*.out"
 "*.test"
