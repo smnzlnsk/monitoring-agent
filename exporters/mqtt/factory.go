@@ -14,7 +14,7 @@ const (
 	defaultInterval   = time.Second * 1
 	defaultClientID   = "test-mqtt-exporter-client"
 	defaultTopic      = "telemetry/metrics"
-	defaultEncoding   = "otlp"
+	defaultEncoding   = "proto"
 	defaultBroker     = "127.0.0.1"
 	defaultBrokerPort = 1883
 )
@@ -33,6 +33,7 @@ func createDefaultConfig() component.Config {
 		Interval: string(defaultInterval),
 		ClientID: defaultClientID,
 		Topic:    defaultTopic,
+		Encoding: defaultEncoding,
 		Broker: BrokerConfig{
 			Host: defaultBroker,
 			Port: defaultBrokerPort,

@@ -55,7 +55,7 @@ func (me *mqttExporter) pushMetrics(ctx context.Context, md pmetric.Metrics) err
 }
 
 func (me *mqttExporter) start(ctx context.Context, host component.Host) error {
-	marshaler, err := newMarshaler(me.config.EncodingExtensionID, host)
+	marshaler, err := newMarshaler(me.config.Encoding)
 	if err != nil {
 		return err
 	}

@@ -4,17 +4,15 @@ import (
 	"errors"
 	"net"
 	"time"
-
-	"go.opentelemetry.io/collector/component"
 )
 
 // Config represents the receiver config settings within the collector's config.yaml
 type Config struct {
-	Interval            string        `mapstructure:"interval"`
-	ClientID            string        `mapstructure:"client_id"`
-	Topic               string        `mapstructure:"topic"`
-	EncodingExtensionID *component.ID `mapstructure:"encoding_extension"`
-	Broker              BrokerConfig  `mapstructure:"broker"`
+	Interval string       `mapstructure:"interval"`
+	ClientID string       `mapstructure:"client_id"`
+	Topic    string       `mapstructure:"topic"`
+	Encoding string       `mapstructure:"encoding"`
+	Broker   BrokerConfig `mapstructure:"broker"`
 }
 
 type BrokerConfig struct {
@@ -39,6 +37,9 @@ func (cfg *Config) Validate() error {
 	}
 	if interval.Seconds() > 60 {
 		return errors.New("interval cannot be more than a minute")
+	}
+	if cfg.Encoding != "json" && cfg.Encoding != "proto" {
+		return errors.New("unsupported encoding. supported encoding: json, proto")
 	}
 	// broker.host
 	//if !isValidIP(cfg.Broker.Host) {
