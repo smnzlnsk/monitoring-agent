@@ -23,11 +23,11 @@ receivers:
 exporters:
   debug:
     verbosity: normal
-  mqttexporter:
+  mqtt:
     interval: 1s
-    client_id: &id test_agent_mac
+    client_id: &id agent_exporter_mac
     broker:
-      host: mosquitto
+      host: localhost
       port: 1883
 
   prometheus:
@@ -55,4 +55,4 @@ service:
     metrics:
       receivers: [hostmetrics, hostmetrics/disk]
       processors: [resource, cumulativetodelta]
-      exporters: [prometheus, mqttexporter]
+      exporters: [mqtt]
