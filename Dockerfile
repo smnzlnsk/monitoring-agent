@@ -14,7 +14,7 @@ COPY ./exporters/ ./exporters
 COPY go.mod go.sum ./
 
 RUN go mod download && \ 
-  go install go.opentelemetry.io/collector/cmd/builder@latest
+  go install go.opentelemetry.io/collector/cmd/builder@v0.109.0
 
 RUN builder --config=manifest.yaml --skip-strict-versioning
 
