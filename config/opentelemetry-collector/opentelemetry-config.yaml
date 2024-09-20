@@ -9,7 +9,7 @@ receivers:
       load:
         cpu_average: true
       network:
-      paging:
+      #paging:
       #processes:
       #process:
 
