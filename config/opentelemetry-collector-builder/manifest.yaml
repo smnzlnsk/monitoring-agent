@@ -18,4 +18,3 @@ exporters:
   - gomod: go.opentelemetry.io/collector/exporter/otlpexporter v0.109.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.109.0
   - gomod: github.com/smnzlnsk/opentelemetry-components/exporter/mqttexporter v0.0.1
-    path: exporters/mqttexporter
