@@ -8,9 +8,13 @@ dist:
 
 receivers:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver v0.109.0
+  - gomod: github.com/smnzlnsk/opentelemetry-components/receiver/unixsocketreceiver v0.0.0
+    path: receivers/unixsocketreceiver
 
 processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor v0.109.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.109.0
+  # todo: include batchprocessor, if necessary
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/cumulativetodeltaprocessor v0.109.0
 
 exporters:
@@ -18,3 +22,4 @@ exporters:
   - gomod: go.opentelemetry.io/collector/exporter/otlpexporter v0.109.0
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.109.0
   - gomod: github.com/smnzlnsk/opentelemetry-components/exporter/mqttexporter v0.0.1
+    path: exporters/mqttexporter

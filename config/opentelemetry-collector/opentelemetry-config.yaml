@@ -20,6 +20,10 @@ receivers:
       disk:
       filesystem:
 
+  unixsocket:
+    polling_interval: 2s
+
+
 exporters:
   debug:
     verbosity: normal
@@ -53,6 +57,6 @@ service:
       level: none
   pipelines:
     metrics:
-      receivers: [hostmetrics, hostmetrics/disk]
+      receivers: [unixsocket,hostmetrics, hostmetrics/disk]
       processors: [resource, cumulativetodelta]
       exporters: [mqtt]
