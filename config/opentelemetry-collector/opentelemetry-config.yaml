@@ -1,20 +1,37 @@
 receivers:
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
+
   hostmetrics:
     collection_interval: 5s
     #root_path: /
     scrapers:
       cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
       memory:
       load:
         cpu_average: true
       network:
-      #paging:
-      #processes:
-      #process:
+        include:
+          interfaces: veth*
+          match_type: regexp
+
+  hostmetrics/process:
+    collection_interval: 5s
+    scrapers:
+      process:
+        metrics:
+          process.disk.io:
+            enabled: true
+        include:
+          names:
+            - htop
+          match_type: strict
+        mute_process_name_error: true
+
 
   hostmetrics/disk:
-    collection_interval: 60s
+    collection_interval: 5s
     #root_path: /
     scrapers:
       disk:
@@ -23,26 +40,15 @@ receivers:
   unixsocket:
     polling_interval: 2s
 
-
-exporters:
-  debug:
-    verbosity: normal
-  mqtt:
-    interval: 1s
-    client_id: &id agent_exporter_mac
-    broker:
-      host: localhost
-      port: 1883
-
-  prometheus:
-    endpoint: "localhost:8882"
-    enable_open_metrics: true
-
 processors:
+
+  batch:
+    timeout: 30s
+
   resource:
     attributes:
       - key: machine
-        value: *id
+        value: &id agent_exporter_mac
         action: upsert
 
   cumulativetodelta:
@@ -51,12 +57,24 @@ processors:
         - system.cpu.time
       match_type: strict
 
+exporters:
+
+  debug:
+    verbosity: normal
+
+  mqtt:
+    interval: 1s
+    client_id: *id
+    broker:
+      host: localhost
+      port: 1883
+
 service:
   telemetry:
     metrics:
       level: none
   pipelines:
     metrics:
-      receivers: [unixsocket,hostmetrics, hostmetrics/disk]
-      processors: [resource, cumulativetodelta]
-      exporters: [mqtt]
+      receivers: [unixsocket, hostmetrics, hostmetrics/process, hostmetrics/disk]
+      processors: [resource, cumulativetodelta, batch]
+      exporters: [debug, mqtt]
