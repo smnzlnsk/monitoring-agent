@@ -68,6 +68,16 @@ processors:
         action: combine
         new_name: container.cpu.time
         submatch_case: lower
+      - include: ^container_memory_(?P<state>.*)_bytes
+        match_type: regexp
+        action: combine
+        new_name: container.memory.usage
+        submatch_case: lower
+      - include: ^container_memory_oom_total
+        match_type: regexp
+        action: update
+        new_name: container.memory.oom
+        submatch_case: lower
       - include: (.*).cpu.*
         match_type: regexp
         action: update
@@ -75,6 +85,18 @@ processors:
           - action: aggregate_labels
             label_set: [ state ]
             aggregation_type: sum
+      - include: (.*).memory.*
+        match_type: regexp
+        action: update
+        operations:
+          - action: aggregate_labels
+            label_set: [ state ]
+            aggregation_type: sum
+          - action: update_label
+            label: state
+            value_actions:
+              - value: usage
+                new_value: used
 
   groupbyattrs:
     keys:
@@ -94,15 +116,6 @@ processors:
       - key: machine
         value: &id monitoring-agent
         action: upsert
-
-  cumulativetodelta:
-    include:
-      metrics:
-        - system.cpu.time
-        - container_cpu_usage_usec_microseconds
-        - container_cpu_system_usec_microseconds
-        - container_cpu_user_usec_microseconds
-      match_type: strict
 
   transform:
     error_mode: ignore
