@@ -29,7 +29,7 @@ receivers:
         cpu_average: true
       network:
         include:
-          interfaces: veth000g*
+          interfaces: vethog*
           match_type: regexp
 
   hostmetrics/process:
