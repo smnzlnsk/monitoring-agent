@@ -114,3 +114,14 @@ run-with-monitoring: dev
 .PHONY: build-remote
 build-remote:
 	$(OCB) --config=$(BUILDER_CONFIG_DIR)/remote-manifest.yaml --skip-strict-versioning
+
+.PHONY: run-remote
+run-remote: build-remote
+	@MACHINE_ID=$$(curl -sf http://localhost:50100/id); \
+	if [ $$? -ne 0 ]; then \
+		echo "Error: Failed to get machine ID from http://localhost:50100/id"; \
+		exit 1; \
+	fi; \
+	OTEL_RESOURCE_MACHINE_ID=$${MACHINE_ID}-monitoring-agent \
+	sudo -E $(BUILD_DIR)/$(BINARY_NAME) --config=$(COLLECTOR_CONFIG_DIR)/opentelemetry-config.yaml
+
