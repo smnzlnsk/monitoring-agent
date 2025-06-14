@@ -2,13 +2,13 @@ dist:
   #  module: github.com/smnzlnsk/monitoring-agent
   description: Master Thesis - Telemetry driven Network Optimisation in Edge-Cloud Orchestration Frameworks
   otelcol_version: 0.109.0
-  version: 0.0.1
+  version: 0.1.0
   output_path: /tmp/monitoring-agent
   name: monitoringagent
 
 receivers:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/hostmetricsreceiver v0.109.0
-  - gomod: github.com/smnzlnsk/opentelemetry-components/receiver/unixsocketreceiver latest
+  - gomod: github.com/smnzlnsk/opentelemetry-components/receiver/unixsocketreceiver v0.1.0
 
 processors:
   - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor v0.109.0
@@ -18,4 +18,4 @@ processors:
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
-  - gomod: github.com/smnzlnsk/opentelemetry-components/exporter/mqttexporter latest
+  - gomod: github.com/smnzlnsk/opentelemetry-components/exporter/mqttexporter v0.1.0

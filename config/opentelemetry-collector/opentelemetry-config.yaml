@@ -25,6 +25,13 @@ receivers:
           system.cpu.physical.count:
             enabled: true
       memory:
+        metrics:
+          system.memory.limit:
+            enabled: true
+      
+  hostmetrics/extended:
+    collection_interval: 1s
+    scrapers:
       load:
         cpu_average: true
       network:
@@ -57,12 +64,21 @@ receivers:
       filesystem:
 
   unixsocket:
-    polling_interval: 2s
+    polling_interval: 1s
 
 
 processors:
   metricstransform:
     transforms:
+      - include: system.cpu.time
+        action: insert
+        new_name: system.cpu.time
+        operations:
+          - action: aggregate_label_values
+            label: state
+            aggregated_values: [user, system, nice, wait, softirq, interrupt, steal]
+            new_value: busy
+            aggregation_type: sum
       - include: ^container_cpu_(?P<state>.*)_usec_microseconds$
         match_type: regexp
         action: combine
@@ -114,7 +130,7 @@ processors:
   resource:
     attributes:
       - key: machine
-        value: &id monitoring-agent
+        value: ${env:OTEL_RESOURCE_MACHINE_ID}
         action: upsert
 
   transform:
@@ -131,15 +147,16 @@ exporters:
 
   mqtt:
     interval: 1s
-    client_id: *id
+    client_id: ${env:OTEL_RESOURCE_MACHINE_ID}
     broker:
       host: 127.0.0.1
-      port: 1883
+      port: 10003
 
 service:
   telemetry:
     metrics:
-      level: none
+      level: detailed
+      address: 0.0.0.0:55681
   pipelines:
     metrics:
       receivers: [unixsocket, prometheus, hostmetrics]
