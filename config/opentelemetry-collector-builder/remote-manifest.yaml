@@ -22,4 +22,5 @@ processors:
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
+  - gomod: go.opentelemetry.io/collector/exporter/nopexporter v0.109.0
   - gomod: github.com/smnzlnsk/opentelemetry-components/exporter/mqttexporter v0.1.0

@@ -149,16 +149,16 @@ exporters:
     interval: 1s
     client_id: ${env:OTEL_RESOURCE_MACHINE_ID}
     broker:
-      host: 127.0.0.1
+      host: 131.159.25.135
       port: 10003
 
 service:
   telemetry:
     metrics:
-      level: detailed
-      address: 0.0.0.0:55681
+      #level: detailed
+      #address: 0.0.0.0:55681
   pipelines:
     metrics:
       receivers: [unixsocket, prometheus, hostmetrics]
       processors: [filter, resource, groupbyattrs, metricstransform, transform, batch]
-      exporters: [debug, mqtt]
+      exporters: [mqtt]
