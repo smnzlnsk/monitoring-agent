@@ -1,0 +1,3 @@
+server = "https://registry-1.docker.io"
+[host."https://3.94.224.37"]
+  capabilities = ["pull", "resolve"]
