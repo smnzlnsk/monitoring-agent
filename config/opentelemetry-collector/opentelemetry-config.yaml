@@ -1,4 +1,11 @@
 receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
   prometheus:
     config:
       scrape_configs:
@@ -155,10 +162,8 @@ exporters:
 service:
   telemetry:
     metrics:
-      #level: detailed
-      #address: 0.0.0.0:55681
   pipelines:
     metrics:
-      receivers: [unixsocket, prometheus, hostmetrics]
+      receivers: [prometheus, hostmetrics, otlp]
       processors: [filter, resource, groupbyattrs, metricstransform, transform, batch]
       exporters: [mqtt]

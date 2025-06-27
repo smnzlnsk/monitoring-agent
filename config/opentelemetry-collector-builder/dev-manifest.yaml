@@ -25,3 +25,6 @@ exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.109.0
   - gomod: github.com/smnzlnsk/opentelemetry-components/exporter/mqttexporter v0.0.1
     path: exporters/mqttexporter
+
+extensions:
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/pprofextension v0.109.0
